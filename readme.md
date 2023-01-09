@@ -6,7 +6,7 @@ Movie Api é um projeto backend criado na qual o usuário pode se cadastrar com 
 
 <p align="left">
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=html,css,js,node" />
+    <img src="https://skillicons.dev/icons?i=html,css,js,nodejs" />
   </a>
 </p>
 
