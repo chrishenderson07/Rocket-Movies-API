@@ -4,13 +4,19 @@ const migrationsRun = require('./database/sqlite/migrations')
 
 const AppError = require('./utils/AppError')
 
+const cors = require('cors')
+
 const express = require('express')
 
 const routes = require('./routes')
 
+const uploadConfig = require('./configs/upload')
+
 const app = express()
 app.use(express.json())
 
+app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
+app.use(cors())
 app.use(routes)
 
 migrationsRun()
@@ -31,5 +37,5 @@ app.use((error, request, response, next) => {
 	})
 })
 
-const PORT = 2222
+const PORT = 3333
 app.listen(PORT, () => console.log(`O servidor esta rodando na porta ${PORT}`))

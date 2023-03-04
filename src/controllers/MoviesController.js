@@ -5,7 +5,7 @@ const { response } = require('express')
 class MoviesController {
 	async create(request, response) {
 		const { title, description, rating, tags } = request.body
-		const { user_id } = request.params
+		const user_id = request.user.id
 
 		if (rating > 5 || rating < 0) {
 			throw new AppError('A avaliação só pode ser feita com números de 0 a 5')
@@ -20,14 +20,16 @@ class MoviesController {
 
 		const tagsInsert = tags.map((name) => {
 			return {
-				movie_id,
 				name,
+				movie_id,
 				user_id,
 			}
 		})
 
 		await knex('movie_tags').insert(tagsInsert)
-		response.status(201).json({ message: 'Filme adicionado com sucesso' })
+		return response
+			.status(201)
+			.json({ message: 'Filme adicionado com sucesso' })
 	}
 
 	async show(request, response) {
@@ -37,6 +39,7 @@ class MoviesController {
 		const tags = await knex('movie_tags')
 			.where({ movie_id: id })
 			.orderBy('name')
+			.groupBy('name')
 
 		return response.json({ ...note, tags })
 	}
@@ -50,7 +53,8 @@ class MoviesController {
 	}
 
 	async index(request, response) {
-		const { title, user_id, tags } = request.query
+		const { title, tags } = request.query
+		const user_id = request.user.id
 		let notes
 
 		if (tags) {
